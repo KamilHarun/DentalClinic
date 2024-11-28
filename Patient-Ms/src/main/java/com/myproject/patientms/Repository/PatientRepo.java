@@ -1,6 +1,5 @@
 package com.myproject.patientms.Repository;
 
-import com.example.appointmentms.Model.Appointment;
 import com.myproject.patientms.Dto.Response.PatientResponseDto;
 import com.myproject.patientms.Model.Patient;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,5 +14,5 @@ public interface PatientRepo extends JpaRepository<Patient , Long> {
 
     List<Patient> findByName(String name);
 
-    List<Appointment> findByPatientId(Long id);
+//    List<Appointment> findByPatientId(Long id);
 }

@@ -1,6 +1,5 @@
 package com.myproject.patientms.Service.Impl;
 
-import com.example.appointmentms.Model.Appointment;
 import com.example.commonms.Dto.AppointmentResponseDto;
 import com.example.commonms.Exception.PatientAlreadyExistException;
 import com.example.commonms.Exception.PatientNotFoundException;

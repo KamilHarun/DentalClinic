@@ -38,15 +38,14 @@ public class AppointmentServiceImpl implements AppointmentService {
     private final AppointmentRepo appointmentRepo;
     private final AppointmentMapper mapper;
     private final PatientFeign patientFeign;
+
     @Override
     public Long create(AppointmentRequestDto appointmentRequestDto) {
 
-        try {
-            PatientResponseDto byId = patientFeign.findById(appointmentRequestDto.getId());
-        } catch (FeignException.NotFound ex) {
-            throw new PatientNotFoundException(PATIENT_NOT_FOUND_EXCEPTION);
+        PatientResponseDto patient = patientFeign.findById(appointmentRequestDto.getPatientId());
+        if (patient == null || appointmentRequestDto.getPatientId() == null) {
+            throw new RuntimeException("Patient not found");
         }
-
         Appointment appointment = mapper.requestDtoToAppointment(appointmentRequestDto);
         appointmentRepo.save(appointment);
 
@@ -75,7 +74,7 @@ public class AppointmentServiceImpl implements AppointmentService {
                         .durationInMinutes(appointment.getDurationInMinutes())
                         .description(appointment.getDescription())
                         .dentistId(appointment.getDentistId())
-                        .patientId(appointment.getPatientId())
+//                        .patientId(appointment.getPatientId())
                         .createdAt(appointment.getCreatedAt())
                         .updatedAt(appointment.getUpdatedAt())
                         .id(appointment.getId())
@@ -97,11 +96,15 @@ public class AppointmentServiceImpl implements AppointmentService {
                     return new AppointmentNotFoundException(APPOINTMENT_NOT_FOUND_EXCEPTION);
                 });
 
-      validatePatient(appointmentRequestDto.getPatientId());
+        try {
+            PatientResponseDto byId = patientFeign.findById(appointmentRequestDto.getId());
+        } catch (FeignException.NotFound ex) {
+            throw new PatientNotFoundException(PATIENT_NOT_FOUND_EXCEPTION);
+        }
 
         log.debug("Existing appointment retrieved: {}", existingAppointment);
 
-        existingAppointment.setPatientId(appointmentRequestDto.getPatientId());
+//        existingAppointment.setPatientId(appointmentRequestDto.getPatientId());
         existingAppointment.setDentistId(appointmentRequestDto.getDentistId());
         existingAppointment.setAppointmentDate(appointmentRequestDto.getAppointmentDate());
         existingAppointment.setStatus(appointmentRequestDto.getStatus());

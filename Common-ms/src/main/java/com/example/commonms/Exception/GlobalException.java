@@ -72,6 +72,19 @@ public class GlobalException {
                 .build();
         return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
+
+    @ExceptionHandler(DentistAlreadyExistException.class)
+    public ResponseEntity<ErrorResponse> dentistAlreadyExistException(DentistAlreadyExistException notFoundException , HttpServletRequest request){
+        Map<String,String> error = new HashMap<>();
+        error.put("error message", messageSource.getMessage(notFoundException.getMessage(), null, Locale.getDefault()));
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .iat(LocalDateTime.now())
+                .message(error)
+                .statusCode(HttpStatus.CONFLICT.value())
+                .build();
+        return new ResponseEntity<>(errorResponse, CONFLICT);
+
+    }
     }
 
 

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.example.commonms.Constant.FeignConstants.PATIENT_SERVICE;
 
-@FeignClient(name = PATIENT_SERVICE , configuration = FeignClientProperties.FeignClientConfiguration.class)
+@FeignClient(value = PATIENT_SERVICE , configuration = FeignClientProperties.class)
 public interface PatientFeign {
     @GetMapping("/api/v1/byId")
-    PatientResponseDto findById(@RequestParam Long id);
+    PatientResponseDto findById(@RequestParam("id") Long id);
 }
