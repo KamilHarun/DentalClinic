@@ -1,4 +1,4 @@
-package com.example.dentistms.Dto.Response;
+package com.example.commonms.Dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -11,7 +11,8 @@ public enum ErrorMessage {
     PATIENT_NOT_FOUND_EXCEPTION ("Patient not found"),
     PATIENT_NOT_FOUND_WITH_NAME_EXCEPTION("Patient not found with given name"),
     APPOINTMENT_NOT_FOUND_EXCEPTION("Appointment not found"),
-    DENTIST_ALREADY_EXIST_EXCEPTION ("Dental already exist");
+    DENTIST_ALREADY_EXIST_EXCEPTION ("Dental already exist"),
+    DENTIST_NOT_FOUND_EXCEPTION ("Dental not found");
 
 
     private final String message;

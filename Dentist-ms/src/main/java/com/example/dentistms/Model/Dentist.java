@@ -16,15 +16,15 @@ public class Dentist {
     Long id;
 
     @Column(nullable = false)
-    private String firstName;
+     String firstName;
 
     @Column(nullable = false)
-    private String lastName;
+     String lastName;
 
     @Column
-    private String email;
+     String email;
 
     @Column
-    private String phoneNumber;
+     String phoneNumber;
 
 }

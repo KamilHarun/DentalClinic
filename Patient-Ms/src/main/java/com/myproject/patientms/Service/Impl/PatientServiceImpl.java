@@ -1,6 +1,8 @@
 package com.myproject.patientms.Service.Impl;
 
 import com.example.commonms.Dto.AppointmentResponseDto;
+import com.example.commonms.Dto.DentistResponseDto;
+import com.example.commonms.Exception.DentistNotFoundException;
 import com.example.commonms.Exception.PatientAlreadyExistException;
 import com.example.commonms.Exception.PatientNotFoundException;
 import com.example.commonms.Exception.PatientNotFoundWithNameException;
@@ -8,6 +10,7 @@ import com.myproject.patientms.Config.PatientMapper;
 import com.myproject.patientms.Dto.Request.PatientRequestDto;
 import com.myproject.patientms.Dto.Response.PatientResponseDto;
 import com.myproject.patientms.Feign.AppointmentFeign;
+import com.myproject.patientms.Feign.DentistFeign;
 import com.myproject.patientms.Model.Patient;
 import com.myproject.patientms.Repository.PatientRepo;
 import com.myproject.patientms.Service.PatientService;
@@ -37,21 +40,43 @@ public class PatientServiceImpl implements PatientService {
     private final PatientRepo patientRepo;
     private final PatientMapper mapper;
     private final AppointmentFeign appointmentFeign;
+    private final DentistFeign dentistFeign;
 
     @Override
     public Long create(PatientRequestDto patientRequestDto) {
         log.info("Attempting to create a new patient with email: {}", patientRequestDto.getEmail());
+
         Optional<Patient> patientByEmail = patientRepo.findByEmail(patientRequestDto.getEmail());
         if (patientByEmail.isPresent()) {
             log.warn("Patient creation failed. A patient with email {} already exists.", patientRequestDto.getEmail());
             throw new PatientAlreadyExistException(PATIENT_ALREADY_EXIST_EXCEPTION);
         }
 
+        log.info("Verifying if dentist with ID {} exists.", patientRequestDto.getDentistId());
+
+        // Dentisti çağırmadan önce log ekle
+        log.info("Sending request to Dentist MS to find dentist with ID: {}", patientRequestDto.getDentistId());
+
+        // Feign Client ile diş hekimi bilgisini al
+        DentistResponseDto dentist = dentistFeign.findById(patientRequestDto.getDentistId());
+
+        // Dentisti aldık, log ekleyelim
+        log.info("Dentist response: {}", dentist);  // Burada dentist nesnesinin içeriğini logluyoruz.
+
+        // Eğer dentist null ise, log ekle
+        if (dentist == null) {
+            log.warn("Patient creation failed. Dentist with ID {} does not exist.", patientRequestDto.getDentistId());
+            throw new DentistNotFoundException(DENTIST_NOT_FOUND_EXCEPTION);
+        }
+
         Patient patient = mapper.requestDtoToPatient(patientRequestDto);
+        patient.setDentistId(patientRequestDto.getDentistId()); // Diş hekimi ID'sini ata
         Patient savedPatient = patientRepo.save(patient);
+
         log.info("Patient created successfully with ID: {}", savedPatient.getPatientId());
         return savedPatient.getPatientId();
     }
+
 
     @Override
     @Cacheable(cacheNames = "patients", key = "#id")

@@ -19,6 +19,7 @@ public class PatientRequestDto implements Serializable {
     String email;
     String gender;
     String status;
+    Long dentistId;
 
     LocalDateTime createdDate;
 }

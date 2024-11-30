@@ -74,9 +74,9 @@ public class GlobalException {
     }
 
     @ExceptionHandler(DentistAlreadyExistException.class)
-    public ResponseEntity<ErrorResponse> dentistAlreadyExistException(DentistAlreadyExistException notFoundException , HttpServletRequest request){
+    public ResponseEntity<ErrorResponse> dentistAlreadyExistException(DentistAlreadyExistException existException , HttpServletRequest request){
         Map<String,String> error = new HashMap<>();
-        error.put("error message", messageSource.getMessage(notFoundException.getMessage(), null, Locale.getDefault()));
+        error.put("error message", messageSource.getMessage(existException.getMessage(), null, Locale.getDefault()));
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
                 .message(error)
@@ -84,6 +84,17 @@ public class GlobalException {
                 .build();
         return new ResponseEntity<>(errorResponse, CONFLICT);
 
+    }
+    @ExceptionHandler(DentistNotFoundException.class)
+    public ResponseEntity<ErrorResponse> dentistNotFoundException (DentistNotFoundException notFoundException , HttpServletRequest httpRequest){
+        Map<String,String> error = new HashMap<>();
+        error.put("error message", messageSource.getMessage(notFoundException.getMessage(), null, Locale.getDefault()));
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .iat(LocalDateTime.now())
+                .message(error)
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .build();
+        return new ResponseEntity<>(errorResponse, NOT_FOUND);
     }
     }
 

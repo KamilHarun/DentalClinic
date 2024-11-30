@@ -50,6 +50,9 @@ public class Patient implements Serializable {
     @NotNull(message = "Status cannot be null")
     String status;
 
+    @NotNull(message = "Dentist cannot be null")
+    Long dentistId;
+
     @PrePersist
     public void prePersist() {
         this.createdDate = LocalDateTime.now();

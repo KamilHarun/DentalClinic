@@ -3,7 +3,6 @@ spring:
     include:
       - db
 
-
   liquibase:
     enabled: false
 
@@ -20,6 +19,8 @@ spring:
       restart:
         enabled: true
 
+#  dentist-ms: http://localhost:8084/api/v1
+
 springdoc:
   api-docs:
     path: /v3/api-docs
@@ -30,8 +31,6 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
-
-
 
 server:
   port: 8030
