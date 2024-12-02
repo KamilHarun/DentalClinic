@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +30,7 @@ public class DentistServiceImpl implements DentistService {
     private final DentistRepo dentistRepository;
     private final DentistMapper mapper;
     private final PatientFeing patientFeing;
+
 
     @Override
     public Long create(DentistRequestDto dentist) {
@@ -45,26 +47,27 @@ public class DentistServiceImpl implements DentistService {
     }
 
     @Override
-    @Cacheable(cacheNames = "dentists" , key = "#id")
+    @Cacheable(cacheNames = "dentists", key = "#id")
     public DentistResponseDto findById(Long id) {
         log.debug("Request to get Dentist : {}", id);
         if (id == null) {
             log.error("Request to get Dentist id is null");
-            throw  new IllegalArgumentException("ID cannot be null");
-    }
+            throw new IllegalArgumentException("ID cannot be null");
+        }
         log.info("Request to get Dentist : {}", id);
         return dentistRepository.findById(id)
                 .map(mapper::dentistToResponseDto)
-                .orElseThrow(()->
+                .orElseThrow(() ->
                         new DentistNotFoundException(ErrorMessage.DENTIST_NOT_FOUND_EXCEPTION));
     }
 
     @Override
     @Cacheable(cacheNames = "patients",
-            key = "#pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort.toString()")    public Page<DentistResponseDto> findAll(Pageable pageable) {
+            key = "#pageable.pageNumber + '-' + #pageable.pageSize + '-' + #pageable.sort.toString()")
+    public Page<DentistResponseDto> findAll(Pageable pageable) {
         log.debug("Request to get all Dentists");
         Page<Dentist> all = dentistRepository.findAll(pageable);
-        if (all.isEmpty()){
+        if (all.isEmpty()) {
             log.error("Request to get all Dentists is empty");
             throw new DentistNotFoundException(ErrorMessage.DENTIST_NOT_FOUND_EXCEPTION);
         }
@@ -99,5 +102,14 @@ public class DentistServiceImpl implements DentistService {
 
         return mapper.toDentistResponseDtoList(patientsByDentist);
 
+    }
+
+    @Override
+    public List<DentistResponseDto> searchDentists(String name) {
+        List<Dentist> dentists = dentistRepository.findByNameContainingIgnoreCase(name);
+
+        return dentists.stream()
+                .map(mapper::dentistToResponseDto)
+                .collect(Collectors.toList());
     }
 }

@@ -58,4 +58,9 @@ public class DentistController {
         return new ResponseEntity<>(dentistService.findDentistsPatient(dentistId) , OK);
 
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<DentistResponseDto>> searchDentists(@RequestParam String name) {
+        return ResponseEntity.ok(dentistService.searchDentists(name));
+    }
 }

@@ -24,4 +24,6 @@ public interface DentistService {
 
     List<DentistResponseDto> findDentistsPatient(Long dentistId);
 
+    List<DentistResponseDto> searchDentists(String name);
+
 }

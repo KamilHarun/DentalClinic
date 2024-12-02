@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class Patient implements Serializable {
+public class Patient extends Audit implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -44,18 +44,10 @@ public class Patient implements Serializable {
     @NotNull(message = "Gender cannot be null")
     String gender;
 
-    @PastOrPresent(message = "Created date must be in the past or present")
-     LocalDateTime createdDate;
-
     @NotNull(message = "Status cannot be null")
     String status;
 
     @NotNull(message = "Dentist cannot be null")
     Long dentistId;
-
-    @PrePersist
-    public void prePersist() {
-        this.createdDate = LocalDateTime.now();
-    }
 
 }
