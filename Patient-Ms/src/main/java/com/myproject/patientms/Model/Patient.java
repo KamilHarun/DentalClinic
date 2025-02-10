@@ -50,4 +50,5 @@ public class Patient extends Audit implements Serializable {
     @NotNull(message = "Dentist cannot be null")
     Long dentistId;
 
+
 }

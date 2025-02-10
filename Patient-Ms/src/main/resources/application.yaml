@@ -12,14 +12,12 @@ spring:
       host: localhost
 
   application:
-    name: patient-ms
+    name: patient-service
 
   devtools:
     remote:
       restart:
         enabled: true
-
-#  dentist-ms: http://localhost:8084/api/v1
 
 springdoc:
   api-docs:
@@ -31,6 +29,24 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      patientService:
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+        permittedNumberOfCallsInHalfOpenState: 3
+
+
 
 server:
   port: 8030

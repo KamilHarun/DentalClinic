@@ -39,8 +39,7 @@ public class GlobalException {
     @ExceptionHandler(PatientNotFoundException.class)
     public ResponseEntity<ErrorResponse> PatientExistHandler(PatientNotFoundException notFoundException , HttpServletRequest request){
         Map<String,String> error = new HashMap<>();
-        error.put("error message :" , messageSource.getMessage(notFoundException.getLocalizedMessage() ,
-                null,  Locale.getDefault()));
+        error.put("error message :" , notFoundException.getErrorMessage().getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
                 .message(error)
@@ -52,7 +51,7 @@ public class GlobalException {
     @ExceptionHandler(PatientNotFoundWithNameException.class)
     public ResponseEntity<ErrorResponse> patientNotFoundWithName(PatientNotFoundWithNameException nameException , HttpServletRequest request){
         Map<String,String > error = new HashMap<>();
-        error.put("error message : " , messageSource.getMessage(nameException.getLocalizedMessage() , null , Locale.getDefault()));
+        error.put("error message : " , nameException.getErrorMessage().getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
                 .message(error)
@@ -64,7 +63,7 @@ public class GlobalException {
     @ExceptionHandler(AppointmentNotFoundException.class)
     public ResponseEntity<ErrorResponse> appointmentNotFoundException(AppointmentNotFoundException notFoundException , HttpServletRequest request){
         Map<String,String> error = new HashMap<>();
-        error.put("error message", messageSource.getMessage(notFoundException.getMessage(), null, Locale.getDefault()));
+        error.put("error message", notFoundException.getErrorMessage().getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
                 .message(error)
@@ -76,7 +75,7 @@ public class GlobalException {
     @ExceptionHandler(DentistAlreadyExistException.class)
     public ResponseEntity<ErrorResponse> dentistAlreadyExistException(DentistAlreadyExistException existException , HttpServletRequest request){
         Map<String,String> error = new HashMap<>();
-        error.put("error message", messageSource.getMessage(existException.getMessage(), null, Locale.getDefault()));
+        error.put("error message", existException.getErrorMessage().getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
                 .message(error)
@@ -88,13 +87,29 @@ public class GlobalException {
     @ExceptionHandler(DentistNotFoundException.class)
     public ResponseEntity<ErrorResponse> dentistNotFoundException (DentistNotFoundException notFoundException , HttpServletRequest httpRequest){
         Map<String,String> error = new HashMap<>();
-        error.put("error message", messageSource.getMessage(notFoundException.getMessage(), null, Locale.getDefault()));
+        error.put("error message", notFoundException.getErrorMessage().getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
                 .message(error)
                 .statusCode(HttpStatus.NOT_FOUND.value())
                 .build();
         return new ResponseEntity<>(errorResponse, NOT_FOUND);
+    }
+
+    @ExceptionHandler(DentistUnavailableException.class)
+    public ResponseEntity<ErrorResponse> dentistUnavailableException(
+            DentistUnavailableException unavailableException, HttpServletRequest request) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error message", unavailableException.getErrorMessage().getMessage());
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .iat(LocalDateTime.now())
+                .message(error)
+                .statusCode(HttpStatus.SERVICE_UNAVAILABLE.value())
+                .build();
+
+        return new ResponseEntity<>(errorResponse, HttpStatus.SERVICE_UNAVAILABLE);
     }
     }
 

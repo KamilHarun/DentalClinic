@@ -1,7 +1,6 @@
 package com.myproject.patientms.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -15,20 +14,23 @@ import java.time.LocalDateTime;
 @Setter
 @MappedSuperclass
 public class Audit {
-
-    @CreatedBy
-    private String createdBy;
-
-    @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    LocalDateTime createdAt;
 
-    @LastModifiedBy
-    private String updatedBy;
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    LocalDateTime updatedAt;
 
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 
-
-
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
+
+

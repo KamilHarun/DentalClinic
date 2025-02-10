@@ -4,12 +4,14 @@ import com.example.commonms.Dto.PatientResponseDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.FeignClientProperties;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import static com.example.commonms.Constant.FeignConstants.PATIENT_SERVICE;
+import static com.example.commonms.Constant.FeignConstants.PATIENT_SERVICE_URL;
 
-@FeignClient(value = PATIENT_SERVICE , configuration = FeignClientProperties.class)
+@FeignClient(name = PATIENT_SERVICE, url = PATIENT_SERVICE_URL)
 public interface PatientFeign {
-    @GetMapping("/api/v1/byId")
-    PatientResponseDto findById(@RequestParam("id") Long id);
+    @GetMapping("/byId{id}")
+    PatientResponseDto findByPatientId(@PathVariable Long id);
 }

@@ -1,11 +1,11 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.8'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version "$springBootVersion"
+    id 'io.spring.dependency-management' version "$dependencyManagementVersion"
 }
 
 group = 'com.MyProject'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 java {
     toolchain {
@@ -24,21 +24,21 @@ repositories {
 }
 
 ext {
-    set('springBootVersion', "3.1.8")
-    set('springCloudVersion', "2022.0.5")
+    set('springBootVersion', "$springBootVersion")
+    set('springCloudVersion', "$springCloudVersion")
 }
 
 dependencies {
-
     implementation project(':Common-ms')
     implementation 'org.springframework.boot:spring-boot-starter-actuator'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'jakarta.validation:jakarta.validation-api:3.0.2'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.1.0'
+    implementation 'org.springframework.cloud:spring-cloud-starter-openfeign'
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.cloud:spring-cloud-starter-circuitbreaker-resilience4j'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
@@ -56,10 +56,8 @@ dependencyManagement {
     }
 }
 
-tasks.register("prepareKotlinBuildScriptModel") {}
-
-
 tasks.named('test') {
     useJUnitPlatform()
 }
 
+tasks.register("prepareKotlinBuildScriptModel") {}

@@ -3,13 +3,12 @@ package com.example.appointmentms.Service.impl;
 import com.example.appointmentms.Dto.Request.AppointmentRequestDto;
 import com.example.appointmentms.Dto.Response.AppointmentResponseDto;
 import com.example.appointmentms.Feign.PatientFeign;
-import com.example.appointmentms.Mapper.AppointmentMapper;
+import com.example.appointmentms.Config.AppointmentMapper;
 import com.example.appointmentms.Model.Appointment;
 import com.example.appointmentms.Repository.AppointmentRepo;
 import com.example.appointmentms.Service.AppointmentService;
 import com.example.commonms.Dto.PatientResponseDto;
 import com.example.commonms.Exception.AppointmentNotFoundException;
-import com.example.commonms.Exception.ErrorMessage;
 import com.example.commonms.Exception.PatientNotFoundException;
 import feign.FeignException;
 import lombok.RequiredArgsConstructor;
@@ -27,8 +26,7 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.example.commonms.Exception.ErrorMessage.APPOINTMENT_NOT_FOUND_EXCEPTION;
-import static com.example.commonms.Exception.ErrorMessage.PATIENT_NOT_FOUND_EXCEPTION;
+import static com.example.commonms.Exception.ErrorMessage.*;
 
 @Service
 @RequiredArgsConstructor
@@ -41,13 +39,27 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     @Override
     public Long create(AppointmentRequestDto appointmentRequestDto) {
+        log.info("Creating appointment for patient ID: {}", appointmentRequestDto.getPatientId());
 
-        PatientResponseDto patient = patientFeign.findById(appointmentRequestDto.getPatientId());
+        PatientResponseDto patient = patientFeign.findByPatientId(appointmentRequestDto.getPatientId());
         if (patient == null || appointmentRequestDto.getPatientId() == null) {
             throw new RuntimeException("Patient not found");
         }
+
+        PatientResponseDto byPatientId = patientFeign.findByPatientId(appointmentRequestDto.getPatientId());
+        if (byPatientId == null || appointmentRequestDto.getPatientId() == null) {
+            log.error("Patient not found with ID: {}", appointmentRequestDto.getPatientId());
+
+            throw new PatientNotFoundException(PATIENT_NOT_FOUND_EXCEPTION);
+        }
+
         Appointment appointment = mapper.requestDtoToAppointment(appointmentRequestDto);
+        log.info("Saving appointment for patient ID: {} with details", appointmentRequestDto.getPatientId());
+
         appointmentRepo.save(appointment);
+
+        log.info("Appointment created successfully with ID: {}", appointment.getId());
+
 
         return appointment.getId();
     }
@@ -67,14 +79,13 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         List<AppointmentResponseDto> appointmentRequestDtos = all.stream()
                 .map(appointment -> AppointmentResponseDto.builder()
-                        .appointmentDate(appointment.getAppointmentDate())
                         .notes(appointment.getNotes())
                         .status(appointment.getStatus())
                         .treatmentType(appointment.getTreatmentType())
                         .durationInMinutes(appointment.getDurationInMinutes())
                         .description(appointment.getDescription())
                         .dentistId(appointment.getDentistId())
-//                        .patientId(appointment.getPatientId())
+                        .patientId(appointment.getPatientId())
                         .createdAt(appointment.getCreatedAt())
                         .updatedAt(appointment.getUpdatedAt())
                         .id(appointment.getId())
@@ -97,16 +108,15 @@ public class AppointmentServiceImpl implements AppointmentService {
                 });
 
         try {
-            PatientResponseDto byId = patientFeign.findById(appointmentRequestDto.getId());
+            PatientResponseDto byId = patientFeign.findByPatientId(appointmentRequestDto.getId());
         } catch (FeignException.NotFound ex) {
             throw new PatientNotFoundException(PATIENT_NOT_FOUND_EXCEPTION);
         }
 
         log.debug("Existing appointment retrieved: {}", existingAppointment);
 
-//        existingAppointment.setPatientId(appointmentRequestDto.getPatientId());
+        existingAppointment.setPatientId(appointmentRequestDto.getPatientId());
         existingAppointment.setDentistId(appointmentRequestDto.getDentistId());
-        existingAppointment.setAppointmentDate(appointmentRequestDto.getAppointmentDate());
         existingAppointment.setStatus(appointmentRequestDto.getStatus());
         existingAppointment.setDescription(appointmentRequestDto.getDescription());
         existingAppointment.setTreatmentType(appointmentRequestDto.getTreatmentType());
@@ -155,7 +165,7 @@ public class AppointmentServiceImpl implements AppointmentService {
             throw new IllegalArgumentException("Invalid date format. Please use yyyy-MM-dd.");
         }
 
-        Page<Appointment> appointments = appointmentRepo.findByAppointmentDate(parsedDate, pageable);
+        Page<Appointment> appointments = appointmentRepo.findByCreatedAt(parsedDate, pageable);
 
         if (appointments.isEmpty()) {
             log.warn("No appointments found for date: {}", parsedDate);
@@ -167,7 +177,7 @@ public class AppointmentServiceImpl implements AppointmentService {
 
     public void validatePatient(Long patientId) {
         try {
-            PatientResponseDto byId = patientFeign.findById(patientId);
+            PatientResponseDto byId = patientFeign.findByPatientId(patientId);
         } catch (FeignException.NotFound e) {
             log.error("Patient not found with ID: {}", patientId);
             throw new PatientNotFoundException(PATIENT_NOT_FOUND_EXCEPTION);

@@ -21,7 +21,7 @@ import static org.springframework.http.HttpStatus.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("api/v1/patient")
+@RequestMapping("/api/v1/patients")
 public class PatientController {
 
     private final PatientService patientService;
@@ -42,7 +42,7 @@ public class PatientController {
             @ApiResponse(responseCode = "404", description = "Patient not found")
     })
     @GetMapping("/byId")
-    public PatientResponseDto findById(@RequestParam Long id) {
+    public PatientResponseDto findByPatientId(@RequestParam Long id) {
         return patientService.findById(id);
     }
 

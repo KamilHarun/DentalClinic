@@ -22,8 +22,7 @@ public class AppointmentRequestDto implements Serializable {
 
     Long dentistId;
 
-    LocalDateTime appointmentDate;
-
+    LocalDateTime appointmentDateTime;
     LocalDateTime createdAt;
 
     LocalDateTime updatedAt;

@@ -106,7 +106,7 @@ public class DentistServiceImpl implements DentistService {
 
     @Override
     public List<DentistResponseDto> searchDentists(String name) {
-        List<Dentist> dentists = dentistRepository.findByNameContainingIgnoreCase(name);
+        List<Dentist> dentists = dentistRepository.findByFirstNameContainingIgnoreCase(name);
 
         return dentists.stream()
                 .map(mapper::dentistToResponseDto)

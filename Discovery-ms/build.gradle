@@ -1,11 +1,11 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.1.8'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version "$springBootVersion"
+    id 'io.spring.dependency-management' version "$dependencyManagementVersion"
 }
 
 group = 'com.MyProject'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0'
 
 java {
     toolchain {
@@ -24,8 +24,8 @@ repositories {
 }
 
 ext {
-    set('springBootVersion', "3.1.8")
-    set('springCloudVersion', "2022.0.5")
+    set('springBootVersion', "$springBootVersion")
+    set('springCloudVersion', "$springCloudVersion")
 }
 
 dependencies {

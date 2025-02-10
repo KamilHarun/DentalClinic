@@ -5,7 +5,7 @@ services:
     image: postgres
     restart: always
     ports:
-      - '5434:5432'
+      - '5432:5432'
     environment:
       - POSTGRES_PASSWORD=password
     volumes:
@@ -13,6 +13,15 @@ services:
     networks:
       - postgres-network
 
+
+  zipkin:
+    image: openzipkin/zipkin
+    container_name: zipkin
+    ports:
+      - "9412:9411"
+    environment:
+      - STORAGE_TYPE=mem
+    restart: always
 
   redis:
     image: redis:latest

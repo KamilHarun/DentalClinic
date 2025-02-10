@@ -14,8 +14,10 @@ import com.myproject.patientms.Feign.DentistFeign;
 import com.myproject.patientms.Model.Patient;
 import com.myproject.patientms.Repository.PatientRepo;
 import com.myproject.patientms.Service.PatientService;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -43,6 +45,7 @@ public class PatientServiceImpl implements PatientService {
     private final DentistFeign dentistFeign;
 
     @Override
+    @CircuitBreaker(name = "createPatient", fallbackMethod = "fallbackForCreatePatient")
     public Long create(PatientRequestDto patientRequestDto) {
         log.info("Attempting to create a new patient with email: {}", patientRequestDto.getEmail());
 
@@ -54,23 +57,16 @@ public class PatientServiceImpl implements PatientService {
 
         log.info("Verifying if dentist with ID {} exists.", patientRequestDto.getDentistId());
 
-        // Dentisti çağırmadan önce log ekle
-        log.info("Sending request to Dentist MS to find dentist with ID: {}", patientRequestDto.getDentistId());
+        DentistResponseDto dentist = dentistFeign.findByDentistId(patientRequestDto.getDentistId());
 
-        // Feign Client ile diş hekimi bilgisini al
-        DentistResponseDto dentist = dentistFeign.findById(patientRequestDto.getDentistId());
-
-        // Dentisti aldık, log ekleyelim
-        log.info("Dentist response: {}", dentist);  // Burada dentist nesnesinin içeriğini logluyoruz.
-
-        // Eğer dentist null ise, log ekle
+        log.info("Dentist response: {}", dentist);
         if (dentist == null) {
             log.warn("Patient creation failed. Dentist with ID {} does not exist.", patientRequestDto.getDentistId());
             throw new DentistNotFoundException(DENTIST_NOT_FOUND_EXCEPTION);
         }
 
         Patient patient = mapper.requestDtoToPatient(patientRequestDto);
-        patient.setDentistId(patientRequestDto.getDentistId()); // Diş hekimi ID'sini ata
+        patient.setDentistId(patientRequestDto.getDentistId());
         Patient savedPatient = patientRepo.save(patient);
 
         log.info("Patient created successfully with ID: {}", savedPatient.getPatientId());
@@ -103,7 +99,6 @@ public class PatientServiceImpl implements PatientService {
 
         List<PatientResponseDto> patientResponseDtos = allPatients.stream()
                 .map(patient -> PatientResponseDto.builder()
-                        .createdDate(patient.getCreatedDate())
                         .name(patient.getName())
                         .surname(patient.getSurname())
                         .email(patient.getEmail())
@@ -164,6 +159,7 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     @Cacheable(cacheNames = "getPatientByHistory", key = "#patientId")
+    @CircuitBreaker(name = "getPatientHistory" , fallbackMethod = "fallbackForGetPatientHistory")
     public Page<PatientResponseDto> getPatientHistory(Long patientId, Pageable page) {
         log.info("Fetching patient history for patient ID: {}", patientId);
 
@@ -173,17 +169,14 @@ public class PatientServiceImpl implements PatientService {
             throw new PatientNotFoundException(PATIENT_NOT_FOUND_EXCEPTION);
         }
 
-        // Fetch appointments for the patient
         log.info("Patient found. Retrieving history for patient ID: {}", patientId);
         Page<AppointmentResponseDto> appointmentByPatient = appointmentFeign.getAppointmentByPatient(patientId, page);
 
-        // Map and sort the appointment responses to patient responses
         List<PatientResponseDto> appointmentResponseDtos = appointmentByPatient.getContent().stream()
                 .sorted(Comparator.comparing(AppointmentResponseDto::getAppointmentDate))
                 .map(mapper::appointmentResponseDtoToPatientResponseDto)
                 .collect(Collectors.toList());
 
-        // Return a paginated response
         return new PageImpl<>(appointmentResponseDtos, appointmentByPatient.getPageable(), appointmentByPatient.getTotalElements());
     }
 
@@ -245,6 +238,16 @@ public class PatientServiceImpl implements PatientService {
         patientRepo.save(patient);
 
         return mapper.patientToResponseDto(patient);
+
+    }
+    public Long fallbackForCreatePatient(PatientRequestDto patientRequestDto, DentistNotFoundException dentistNotFoundException) {
+        log.warn("Fallback for patient creation due to failure in dentist service.");
+        throw new DentistNotFoundException(DENTIST_NOT_FOUND_EXCEPTION);
+    }
+
+    public Page<PatientResponseDto> fallbackForGetPatientHistory(Long patientId, Pageable page, Throwable throwable) {
+        log.warn("Fallback for patient history due to failure in appointment service.");
+        return Page.empty();
 
     }
 

@@ -1,9 +1,9 @@
 package com.example.appointmentms.Model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -16,18 +16,22 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class Audit {
 
-    @CreatedBy
-    private String createdBy;
-
-    @CreatedDate
     @Column(updatable = false)
-    private LocalDateTime createdAt;
+    @Temporal(TemporalType.TIMESTAMP)
+    LocalDateTime createdAt;
 
-    @LastModifiedBy
-    private String updatedBy;
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    LocalDateTime updatedAt;
 
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 
-
+    @PreUpdate
+    public void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
+

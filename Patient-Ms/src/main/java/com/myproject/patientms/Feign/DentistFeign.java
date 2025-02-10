@@ -12,5 +12,5 @@ import static com.example.commonms.Constant.FeignConstants.DENTIST_SERVICE_URL;
 public interface DentistFeign {
 
     @GetMapping("/findById/{id}")
-    DentistResponseDto findById(@PathVariable("id") Long id);
+    DentistResponseDto findByDentistId(@PathVariable("id") Long id);
 }

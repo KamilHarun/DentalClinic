@@ -30,7 +30,7 @@ public class DentistController {
     }
 
     @GetMapping("/findById/{id}")
-    public DentistResponseDto findById(@PathVariable Long id) {
+    public DentistResponseDto findByDentistId(@PathVariable Long id) {
         return dentistService.findById(id);
     }
 

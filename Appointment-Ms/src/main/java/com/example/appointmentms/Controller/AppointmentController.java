@@ -32,15 +32,17 @@ public class AppointmentController {
         return new ResponseEntity<>(appointmentService.create(appointmentRequestDto), CREATED);
     }
 
+
     @Operation(summary = "Find appointment by ID", description = "Finds and returns the details of an appointment by its ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Appointment found successfully"),
             @ApiResponse(responseCode = "404", description = "Appointment not found with the given ID")
     })
-    @GetMapping("/{id}")
-    public AppointmentResponseDto findById(@RequestParam Long id) {
+    @GetMapping("findById/{id}")
+    public AppointmentResponseDto findById(@PathVariable Long id) {
         return appointmentService.findById(id);
     }
+
 
     @Operation(summary = "Get all appointments", description = "Retrieves all appointments with pagination support")
     @ApiResponses(value = {

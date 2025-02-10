@@ -13,5 +13,5 @@ public interface DentistRepo extends JpaRepository<Dentist, Long> {
     Optional<Dentist> findByEmail(String email);
 
 
-    List<Dentist> findByNameContainingIgnoreCase(String name);
+    List<Dentist> findByFirstNameContainingIgnoreCase(String name);
 }

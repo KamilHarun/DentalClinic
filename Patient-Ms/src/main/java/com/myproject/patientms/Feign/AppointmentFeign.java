@@ -16,7 +16,7 @@ import static com.example.commonms.Constant.FeignConstants.APPOINTMENT_SERVICE_U
 @FeignClient(name = APPOINTMENT_SERVICE , url = APPOINTMENT_SERVICE_URL)
 public interface AppointmentFeign {
     @GetMapping("/{id}")
-    AppointmentResponseDto findById(@RequestParam Long id);
+    AppointmentResponseDto findByPatientId(@RequestParam Long id);
 
     @GetMapping("/byPatients/{patientId}")
     Page<AppointmentResponseDto> getAppointmentByPatient(@PathVariable Long patientId, Pageable pageable);

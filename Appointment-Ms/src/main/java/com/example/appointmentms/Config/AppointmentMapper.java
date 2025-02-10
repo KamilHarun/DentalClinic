@@ -1,4 +1,4 @@
-package com.example.appointmentms.Mapper;
+package com.example.appointmentms.Config;
 
 import com.example.appointmentms.Dto.Request.AppointmentRequestDto;
 import com.example.appointmentms.Dto.Response.AppointmentResponseDto;
