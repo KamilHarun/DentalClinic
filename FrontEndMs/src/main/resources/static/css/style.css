@@ -1,0 +1,21 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar {
+    box-shadow: 0 2px 4px rgba(0,0,0,.1);
+}
+
+.card {
+    transition: transform .2s;
+    box-shadow: 0 4px 6px rgba(0,0,0,.1);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* Randevu durum renkleri */
+.status-confirmed { color: #28a745; }
+.status-cancelled { color: #dc3545; }
+.status-pending { color: #ffc107; }

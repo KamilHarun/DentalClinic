@@ -30,12 +30,16 @@ ext {
     set('springCloudVersion', "$springCloudVersion")
 }
 
-
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.webjars:bootstrap:5.2.3'
+    implementation 'org.webjars:font-awesome:6.4.0'
 }
+
 dependencyManagement {
     imports {
         mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
@@ -47,3 +51,6 @@ tasks.named('test') {
 }
 
 tasks.register("prepareKotlinBuildScriptModel") {}
+
+
+tasks

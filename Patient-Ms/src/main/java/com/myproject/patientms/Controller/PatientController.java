@@ -112,13 +112,13 @@ public class PatientController {
             @ApiResponse(responseCode = "200", description = "Contact information updated successfully"),
             @ApiResponse(responseCode = "404", description = "Patient not found")
     })
+
     @PutMapping("/updateContact{id}")
     public ResponseEntity<PatientResponseDto> updateContact(
             @RequestParam(required = false) String phone,
             @RequestParam(required = false) String email,
             @RequestParam(required = false) Long id) {
         return new ResponseEntity<>(patientService.updateContact(phone, email, id), OK);
-
 
     }
     @Operation(summary = "Update patient's Status ", description = "Update a patient's Status.")

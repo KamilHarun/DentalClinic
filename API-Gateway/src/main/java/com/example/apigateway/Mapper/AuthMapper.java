@@ -6,9 +6,11 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.core.OAuth2AccessToken;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.example.apigateway.Mapper.DateMapper.DATE_MAPPER;
+
 
 public enum AuthMapper {
     AUTH_MAPPER;
@@ -16,16 +18,16 @@ public enum AuthMapper {
     public AuthResponse buildAuthResponse(OidcUser oidcUser ,
                                           OAuth2AuthorizedClient client) {
 
-       return AuthResponse.builder()
-               .userId(oidcUser.getEmail())
-               .accessToken(client.getAccessToken().getTokenValue())
-               .refreshToken(client.getRefreshToken().getTokenValue())
-               .expiresAt(DATE_MAPPER.toLocalDateTime(client.getAccessToken().getExpiresAt()))
-               .authorities(oidcUser.getAuthorities()
-                       .stream()
-                       .map(GrantedAuthority::getAuthority)
-                       .toList()
-               )
+        return AuthResponse.builder()
+                .userId(oidcUser.getEmail())
+                .accessToken(client.getAccessToken().getTokenValue())
+                .refreshToken(Objects.requireNonNull(client.getRefreshToken()).getTokenValue())
+                .expiresAt(DATE_MAPPER.toLocalDateTime(client.getAccessToken().getExpiresAt()))
+                .authorities(oidcUser.getAuthorities()
+                        .stream()
+                        .map(GrantedAuthority::getAuthority)
+                        .toList()
+                )
 
                 .build();
 

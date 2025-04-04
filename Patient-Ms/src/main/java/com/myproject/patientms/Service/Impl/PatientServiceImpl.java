@@ -45,7 +45,6 @@ public class PatientServiceImpl implements PatientService {
     private final DentistFeign dentistFeign;
 
     @Override
-    @CircuitBreaker(name = "createPatient", fallbackMethod = "fallbackForCreatePatient")
     public Long create(PatientRequestDto patientRequestDto) {
         log.info("Attempting to create a new patient with email: {}", patientRequestDto.getEmail());
 
@@ -159,7 +158,6 @@ public class PatientServiceImpl implements PatientService {
 
     @Override
     @Cacheable(cacheNames = "getPatientByHistory", key = "#patientId")
-    @CircuitBreaker(name = "getPatientHistory" , fallbackMethod = "fallbackForGetPatientHistory")
     public Page<PatientResponseDto> getPatientHistory(Long patientId, Pageable page) {
         log.info("Fetching patient history for patient ID: {}", patientId);
 

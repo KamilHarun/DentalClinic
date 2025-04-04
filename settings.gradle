@@ -1,9 +1,10 @@
 rootProject.name = 'DentalClinic'
 
 include 'API-Gateway'
+include 'Dentist-ms'
 include 'Common-ms'
 include 'Discovery-ms'
 include 'Patient-Ms'
 include 'Appointment-Ms'
-include 'Dentist-ms'
-include 'FrontEnd-ms'
+include 'FrontEndMs'
+

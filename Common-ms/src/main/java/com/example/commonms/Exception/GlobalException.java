@@ -44,6 +44,7 @@ public class GlobalException {
                 .iat(LocalDateTime.now())
                 .message(error)
                 .statusCode(HttpStatus.CONTINUE.value())
+                .path(request.getRequestURI())
                 .build();
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }

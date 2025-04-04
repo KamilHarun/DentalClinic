@@ -1,4 +1,4 @@
-package com.example.frontendms;
+package org.example.frontendms;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
