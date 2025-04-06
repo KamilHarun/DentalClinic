@@ -47,13 +47,15 @@ spring:
 
 springdoc:
   swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
     urls:
       - name: patient-service
-        url: http://localhost:8030/v3/api-docs
+        url: /api/v1/patients/v3/api-docs
       - name: dentist-service
-        url: http://localhost:8084/v3/api-docs
+        url: /api/v1/dentists/v3/api-docs
       - name: appointment-service
-        url: http://localhost:8031/v3/api-docs
+        url: /api/v1/appointment/v3/api-docs
 
 management:
   endpoints:
