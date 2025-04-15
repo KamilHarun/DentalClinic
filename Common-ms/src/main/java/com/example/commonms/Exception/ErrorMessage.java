@@ -13,7 +13,8 @@ public enum ErrorMessage {
     APPOINTMENT_NOT_FOUND_EXCEPTION("Appointment not found %s "),
     DENTIST_ALREADY_EXIST_EXCEPTION ("Dental already exist %s "),
     DENTIST_NOT_FOUND_EXCEPTION ("Dental not found %s "),
-    DENTIST_UNAVAILABLE_EXCEPTION ("Dentist is not available for the selected date and time %s ");
+    DENTIST_UNAVAILABLE_EXCEPTION ("Dentist is not available for the selected date and time %s "),
+    INFORMATION_NOT_FOUND_EXCEPTION ("Information not found %s ");
 
 
     private final String message;

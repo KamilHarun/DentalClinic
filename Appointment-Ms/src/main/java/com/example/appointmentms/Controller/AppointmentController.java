@@ -2,6 +2,7 @@ package com.example.appointmentms.Controller;
 
 import com.example.appointmentms.Dto.Request.AppointmentRequestDto;
 import com.example.appointmentms.Dto.Response.AppointmentResponseDto;
+import com.example.appointmentms.Enums.TreatmentType;
 import com.example.appointmentms.Service.AppointmentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -91,6 +92,10 @@ public class AppointmentController {
         return appointmentService.getAppointmentByHistory(date,pageable);
     }
 
+    @GetMapping("/treatment-types")
+    public ResponseEntity<TreatmentType[]> getTreatmentTypes() {
+        return ResponseEntity.ok(TreatmentType.values());
+    }
 
 
 

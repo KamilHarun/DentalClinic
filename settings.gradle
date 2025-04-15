@@ -7,4 +7,5 @@ include 'Discovery-ms'
 include 'Patient-Ms'
 include 'Appointment-Ms'
 include 'FrontEndMs'
+include 'Information-ms'
 

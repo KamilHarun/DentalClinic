@@ -112,6 +112,20 @@ public class GlobalException {
 
         return new ResponseEntity<>(errorResponse, HttpStatus.SERVICE_UNAVAILABLE);
     }
+
+    @ExceptionHandler(InfoNotFoundException.class)
+    public ResponseEntity<ErrorResponse> infoNotFoundException(InfoNotFoundException exception , HttpServletRequest request){
+        Map<String,String> error = new HashMap<>();
+        error.put("error message : " , exception.getErrorMessage().getMessage());
+
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(error)
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .path(request.getRequestURI())
+                .iat(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorResponse, NOT_FOUND);
+    }
     }
 
 

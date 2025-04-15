@@ -1,0 +1,37 @@
+// Lists
+
+// Unstyled keeps list items block level, just removes default browser padding and list-style
+@mixin list-unstyled {
+  padding-left: 0;
+  list-style: none;
+}// Pagination
+
+// scss-docs-start pagination-mixin
+@mixin pagination-size($padding-y, $padding-x, $font-size, $border-radius) {
+  .page-link {
+    padding: $padding-y $padding-x;
+    @include font-size($font-size);
+  }
+
+  .page-item {
+    @if $pagination-margin-start == (-$pagination-border-width) {
+      &:first-child {
+        .page-link {
+          @include border-start-radius($border-radius);
+        }
+      }
+
+      &:last-child {
+        .page-link {
+          @include border-end-radius($border-radius);
+        }
+      }
+    } @else {
+      //Add border-radius to all pageLinks in case they have left margin
+      .page-link {
+        @include border-radius($border-radius);
+      }
+    }
+  }
+}
+// scss-docs-end pagination-mixin

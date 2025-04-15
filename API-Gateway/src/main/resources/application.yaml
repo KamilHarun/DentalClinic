@@ -4,6 +4,10 @@ spring:
 
   cloud:
     gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:8080"
       discovery:
         locator:
           enabled: true
@@ -18,7 +22,7 @@ spring:
               args:
                 name: patientServiceCircuitBreaker
                 fallbackUri: forward:/fallback/patientServiceFallBack
-            - RewritePath=/api/v1/patients(?<segment>.*), /${segment}
+            - RewritePath=/api/v1/patients/(?<segment>.*), /api/v1/patients/${segment}
 
 
         # Dentist Service
@@ -31,7 +35,8 @@ spring:
               args:
                 name: dentistServiceCircuitBreaker
                 fallbackUri: forward:/fallback/dentistServiceFallBack
-            - RewritePath=/api/v1/dentists(?<segment>.*), /${segment}
+            - RewritePath=/api/v1/dentists/(?<segment>.*), /api/v1/dentists/${segment}
+
 
         # Appointment Service
         - id: appointment-service
@@ -43,7 +48,8 @@ spring:
               args:
                 name: appointmentServiceCircuitBreaker
                 fallbackUri: forward:/fallback/appointmentServiceFallBack
-            - RewritePath=/api/v1/appointment(?<segment>.*), /${segment}
+            - RewritePath=/api/v1/appointment/(?<segment>.*), /api/v1/appointment/${segment}
+
 
 springdoc:
   swagger-ui:

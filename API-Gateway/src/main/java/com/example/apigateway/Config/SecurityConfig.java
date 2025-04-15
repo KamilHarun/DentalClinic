@@ -10,6 +10,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;
 import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -19,26 +20,30 @@ public class SecurityConfig {
 
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http) {
-        http.authorizeExchange( exchange -> exchange
+        http
+                .csrf(csrf -> csrf.disable())
+                .cors(Customizer.withDefaults())
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/api/v1/**").permitAll()
                         .anyExchange().authenticated()
-                )
-                .oauth2Login(Customizer.withDefaults())
-                .oauth2ResourceServer(
-                        oauth2 -> oauth2
-                                .jwt(Customizer.withDefaults())
                 );
+
         return http.build();
     }
 
     @Bean
     public CorsWebFilter corsWebFilter() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("http://localhost:3000")); // Frontend URL
+        config.setAllowedOrigins(List.of("http://localhost:8080")); // Frontend URL
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
+        config.setExposedHeaders(List.of("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
         config.setAllowCredentials(true);
+        config.setMaxAge(3600L); // 1 saat
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
+
         return new CorsWebFilter(source);
     }
 }

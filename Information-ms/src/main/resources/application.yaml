@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: info-ms
+  datasource:
+    url: jdbc:postgresql://localhost:5432/
+    username: postgres
+    password: password
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8082

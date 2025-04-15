@@ -8,26 +8,41 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/")
 public class WebController {
-    @GetMapping
-    public String index(Model model) {
-        // Örnek veri - Gerçek uygulamada servis katmanından alınmalı
-        model.addAttribute("todayAppointments", 8);
-        return "index";
+
+    @GetMapping("/home")
+    public String home() {
+        return "home"; // templates/home.html
     }
 
-    @GetMapping("/appointments")
-    public String appointments() {
-        return "appointments";
+    @GetMapping("/about")
+    public String about() {
+        return "about"; // templates/about.html
     }
 
-    @GetMapping("/patients")
-    public String patients() {
-        return "patients";
+    @GetMapping("/service")
+    public String service() {
+        return "service"; // templates/service.html
     }
 
-    @GetMapping("/dentists")
-    public String dentists() {
-        return "dentists";
+    @GetMapping("/contact")
+    public String contact() {
+        return "contact"; // templates/contact.html
+    }
+
+    @GetMapping("/appointment")
+    public String appointment() {
+        return "appointment"; // templates/appointment.html
+    }
+
+    @GetMapping("/")
+    public String index() {
+        return "index"; // templates/index.html
+    }
+
+    @GetMapping("/team")
+    public String team() {
+        return "team";
     }
 }
+
 
