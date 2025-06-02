@@ -1,0 +1,30 @@
+spring:
+  application:
+    name: auth-service
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: harunov21@gmail.com
+    password: rvfx emss yjru zkof
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  datasource:
+    username: postgres
+    url: jdbc:postgresql://localhost:5432/
+    password: password
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+
+server:
+  port: 8089

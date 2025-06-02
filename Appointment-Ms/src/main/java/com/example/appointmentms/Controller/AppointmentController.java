@@ -14,6 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.springframework.http.HttpStatus.*;
 
 
@@ -93,8 +96,11 @@ public class AppointmentController {
     }
 
     @GetMapping("/treatment-types")
-    public ResponseEntity<TreatmentType[]> getTreatmentTypes() {
-        return ResponseEntity.ok(TreatmentType.values());
+    public ResponseEntity<List<String>> getTreatmentTypes() {
+        List<String> types = Arrays.stream(TreatmentType.values())
+                .map(Enum::name)
+                .toList();
+        return ResponseEntity.ok(types);
     }
 
 

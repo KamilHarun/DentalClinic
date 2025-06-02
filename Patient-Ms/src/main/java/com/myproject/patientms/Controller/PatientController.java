@@ -42,7 +42,7 @@ public class PatientController {
             @ApiResponse(responseCode = "404", description = "Patient not found")
     })
     @GetMapping("/byId")
-    public PatientResponseDto findByPatientId(@RequestParam Long id) {
+    public PatientResponseDto findByPatientId(@RequestParam ("id") Long id) {
         return patientService.findById(id);
     }
 
@@ -131,6 +131,15 @@ public class PatientController {
                                                                    @RequestBody PatientRequestDto patientRequestDto){
         return new ResponseEntity<>(patientService.updatePatientStatus(id,patientRequestDto) , OK);
 
+    }
+    @Operation(summary = "Get patient's by email ", description = "get patient's by email.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Getting patient by email is successfully"),
+            @ApiResponse(responseCode = "404", description = "Patient not found")
+    })
+    @GetMapping("/byEmail")
+    public ResponseEntity<PatientResponseDto> getPatientByEmail(@RequestParam String  email){
+        return new ResponseEntity<>(patientService.getPatientByEmail(email) , OK);
     }
 }
 

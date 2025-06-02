@@ -14,7 +14,10 @@ public enum ErrorMessage {
     DENTIST_ALREADY_EXIST_EXCEPTION ("Dental already exist %s "),
     DENTIST_NOT_FOUND_EXCEPTION ("Dental not found %s "),
     DENTIST_UNAVAILABLE_EXCEPTION ("Dentist is not available for the selected date and time %s "),
-    INFORMATION_NOT_FOUND_EXCEPTION ("Information not found %s ");
+    INFORMATION_NOT_FOUND_EXCEPTION ("Information not found %s "),
+    EMAIL_ALREADY_EXIST_EXCEPTION ("Email already exist %s "),
+    USERNAME_NOT_FOUND_EXCEPTION ("Username not found %s "),
+    OKTA_REGISTRATION_EXCEPTION ("Okta registration failed %s ");
 
 
     private final String message;

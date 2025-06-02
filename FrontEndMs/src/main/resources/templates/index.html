@@ -43,6 +43,7 @@
 </div>
 <!-- Spinner End -->
 
+
 <!-- Topbar Start -->
 <div class="container-fluid bg-light ps-5 pe-0 d-none d-lg-block">
     <div class="row gx-0">
@@ -73,11 +74,13 @@
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
         <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <div class="navbar-nav ms-auto py-0">
-            <a th:href="@{/}" class="nav-item nav-link active">Home</a>
+            <a th:href="@{/}" class="nav-item nav-link">Home</a>
             <a th:href="@{/about}" class="nav-item nav-link">About</a>
             <a th:href="@{/service}" class="nav-item nav-link">Service</a>
+
             <div class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Pages</a>
                 <div class="dropdown-menu m-0">
@@ -87,13 +90,52 @@
                     <a th:href="@{/appointment}" class="dropdown-item">Appointment</a>
                 </div>
             </div>
+
             <a th:href="@{/contact}" class="nav-item nav-link">Contact</a>
         </div>
-        <button type="button" class="btn text-dark" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fa fa-search"></i></button>
+
+        <!-- Arama ikonu -->
+        <button type="button" class="btn text-dark" data-bs-toggle="modal" data-bs-target="#searchModal">
+            <i class="fa fa-search"></i>
+        </button>
+
+        <!-- Login ve Register Butonları -->
+        <a href="/register.html" class="btn btn-primary">Sign In</a>
+        <a href="/logIn.html" class="btn btn-primary">Log In</a>
+
+        <!-- Randevu butonu -->
         <a th:href="@{/appointment}" class="btn btn-primary py-2 px-4 ms-3">Appointment</a>
     </div>
 </nav>
 <!-- Navbar End -->
+
+
+
+<!-- Ek: Giriş kontrolü için JavaScript -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const authSection = document.getElementById("auth-section");
+
+        // Örnek: Token varsa kullanıcı giriş yapmış demektir
+        const token = localStorage.getItem("authToken");
+        const username = localStorage.getItem("username");
+
+        if (token && username) {
+            // Kullanıcı giriş yapmış
+            authSection.innerHTML = `
+                <a href="/profile.html" class="btn btn-outline-primary d-flex align-items-center">
+                    <i class="fa fa-user-circle me-1"></i>
+                    <span>${username}</span>
+                </a>
+            `;
+        } else {
+            // Giriş yapmamış
+            authSection.innerHTML = `
+                <a href="/LogIn.html" class="btn btn-primary">Sign In</a>
+            `;
+        }
+    });
+</script>
 
 <!-- Carousel Start -->
 <div class="container-fluid p-0">
@@ -133,6 +175,7 @@
     </div>
 </div>
 <!-- Carousel End -->
+
 
 <!--About Start: -->
 <div class="container-fluid py-5 wow fadeInUp" data-wow-delay="0.1s">

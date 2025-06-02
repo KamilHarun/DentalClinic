@@ -3,6 +3,7 @@ package com.example.commonms.Exception;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,9 +38,9 @@ public class GlobalException {
     }
 
     @ExceptionHandler(PatientNotFoundException.class)
-    public ResponseEntity<ErrorResponse> PatientExistHandler(PatientNotFoundException notFoundException , HttpServletRequest request){
-        Map<String,String> error = new HashMap<>();
-        error.put("error message :" , notFoundException.getErrorMessage().getMessage());
+    public ResponseEntity<ErrorResponse> PatientExistHandler(PatientNotFoundException notFoundException, HttpServletRequest request) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error message :", notFoundException.getErrorMessage().getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
                 .message(error)
@@ -50,20 +51,20 @@ public class GlobalException {
     }
 
     @ExceptionHandler(PatientNotFoundWithNameException.class)
-    public ResponseEntity<ErrorResponse> patientNotFoundWithName(PatientNotFoundWithNameException nameException , HttpServletRequest request){
-        Map<String,String > error = new HashMap<>();
-        error.put("error message : " , nameException.getErrorMessage().getMessage());
+    public ResponseEntity<ErrorResponse> patientNotFoundWithName(PatientNotFoundWithNameException nameException, HttpServletRequest request) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error message : ", nameException.getErrorMessage().getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
                 .message(error)
                 .statusCode(HttpStatus.CONTINUE.value())
                 .build();
-        return new ResponseEntity<>(errorResponse , NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, NOT_FOUND);
     }
 
     @ExceptionHandler(AppointmentNotFoundException.class)
-    public ResponseEntity<ErrorResponse> appointmentNotFoundException(AppointmentNotFoundException notFoundException , HttpServletRequest request){
-        Map<String,String> error = new HashMap<>();
+    public ResponseEntity<ErrorResponse> appointmentNotFoundException(AppointmentNotFoundException notFoundException, HttpServletRequest request) {
+        Map<String, String> error = new HashMap<>();
         error.put("error message", notFoundException.getErrorMessage().getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
@@ -74,8 +75,8 @@ public class GlobalException {
     }
 
     @ExceptionHandler(DentistAlreadyExistException.class)
-    public ResponseEntity<ErrorResponse> dentistAlreadyExistException(DentistAlreadyExistException existException , HttpServletRequest request){
-        Map<String,String> error = new HashMap<>();
+    public ResponseEntity<ErrorResponse> dentistAlreadyExistException(DentistAlreadyExistException existException, HttpServletRequest request) {
+        Map<String, String> error = new HashMap<>();
         error.put("error message", existException.getErrorMessage().getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
@@ -85,9 +86,10 @@ public class GlobalException {
         return new ResponseEntity<>(errorResponse, CONFLICT);
 
     }
+
     @ExceptionHandler(DentistNotFoundException.class)
-    public ResponseEntity<ErrorResponse> dentistNotFoundException (DentistNotFoundException notFoundException , HttpServletRequest httpRequest){
-        Map<String,String> error = new HashMap<>();
+    public ResponseEntity<ErrorResponse> dentistNotFoundException(DentistNotFoundException notFoundException, HttpServletRequest httpRequest) {
+        Map<String, String> error = new HashMap<>();
         error.put("error message", notFoundException.getErrorMessage().getMessage());
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .iat(LocalDateTime.now())
@@ -114,9 +116,9 @@ public class GlobalException {
     }
 
     @ExceptionHandler(InfoNotFoundException.class)
-    public ResponseEntity<ErrorResponse> infoNotFoundException(InfoNotFoundException exception , HttpServletRequest request){
-        Map<String,String> error = new HashMap<>();
-        error.put("error message : " , exception.getErrorMessage().getMessage());
+    public ResponseEntity<ErrorResponse> infoNotFoundException(InfoNotFoundException exception, HttpServletRequest request) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error message : ", exception.getErrorMessage().getMessage());
 
         ErrorResponse errorResponse = ErrorResponse.builder()
                 .message(error)
@@ -126,6 +128,46 @@ public class GlobalException {
                 .build();
         return new ResponseEntity<>(errorResponse, NOT_FOUND);
     }
+
+    @ExceptionHandler(EmailAlreadyExistException.class)
+    public ResponseEntity<ErrorResponse> emailAlreadyExistException(EmailAlreadyExistException exception, HttpServletRequest request) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error message : ", exception.getErrorMessage().getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(error)
+                .statusCode(HttpStatus.CONFLICT.value())
+                .path(request.getRequestURI())
+                .iat(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorResponse, CONFLICT);
     }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ErrorResponse> usernameNotFoundException(UsernameNotFoundException exception, HttpServletRequest request) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error message : ", exception.getErrorMessage().getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(error)
+                .statusCode(HttpStatus.NOT_FOUND.value())
+                .path(request.getRequestURI())
+                .iat(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorResponse, NOT_FOUND);
+    }
+
+    @ExceptionHandler(OktaRegistrationException.class)
+    public ResponseEntity<ErrorResponse> oktaRegistrationException(OktaRegistrationException exception, HttpServletRequest request) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error message : ", exception.getErrorMessage().getMessage());
+        ErrorResponse errorResponse = ErrorResponse.builder()
+                .message(error)
+                .statusCode(HttpStatus.CONFLICT.value())
+                .path(request.getRequestURI())
+                .iat(LocalDateTime.now())
+                .build();
+        return new ResponseEntity<>(errorResponse, CONFLICT);
+
+    }
+}
 
 

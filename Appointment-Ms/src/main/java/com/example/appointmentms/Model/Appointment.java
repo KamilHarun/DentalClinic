@@ -47,4 +47,9 @@ public class Appointment extends Audit implements Serializable  {
     @Column(name = "notes")
     String notes;
 
+
+    LocalDateTime appointmentDate;
+
+    LocalDateTime appointmentTime;
+
 }

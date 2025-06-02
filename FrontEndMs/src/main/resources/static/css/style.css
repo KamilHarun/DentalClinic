@@ -108,6 +108,48 @@ h6,
     outline: none;
     transition: .5s;
 }
+.LogIn-page {
+    background: linear-gradient(rgba(9, 30, 62, .85), rgba(9, 30, 62, .85)), url(../img/teeth-icons.jpg) center center no-repeat;
+    background-size: cover;
+}
+
+.LogInn-container {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 100px;
+}
+
+.LogIn-container h4 {
+    color: var(--primary);
+    margin-bottom: 25px;
+}
+
+.LogIn-container .form-control {
+    padding: 12px 15px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.LogIn-container .btn-primary {
+    padding: 12px;
+    border-radius: 5px;
+    font-weight: 600;
+}
+
+.LogIn-container a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: all 0.3s;
+}
+
+.LogIn-container a:hover {
+    color: var(--secondary);
+    text-decoration: underline;
+}
+
 
 .sticky-top.navbar-light .navbar-nav .nav-link {
     padding: 20px 15px;

@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
 @Entity
@@ -29,5 +30,6 @@ public class Dentist extends Audit implements Serializable {
 
     @Column
      String phoneNumber;
+
 
 }

@@ -29,4 +29,7 @@ public interface PatientService {
     PatientResponseDto updateContact(String phone, String email, Long id);
 
     PatientResponseDto updatePatientStatus(Long id, PatientRequestDto patientRequestDto);
+
+    PatientResponseDto getPatientByEmail(String email);
+
 }

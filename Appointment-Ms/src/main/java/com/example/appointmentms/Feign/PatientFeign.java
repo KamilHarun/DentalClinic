@@ -12,6 +12,6 @@ import static com.example.commonms.Constant.FeignConstants.PATIENT_SERVICE_URL;
 
 @FeignClient(name = PATIENT_SERVICE, url = PATIENT_SERVICE_URL)
 public interface PatientFeign {
-    @GetMapping("/byId{id}")
-    PatientResponseDto findByPatientId(@PathVariable Long id);
+    @GetMapping("/byId")
+    PatientResponseDto findByPatientId(@RequestParam("id") Long id);
 }

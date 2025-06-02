@@ -249,4 +249,10 @@ public class PatientServiceImpl implements PatientService {
 
     }
 
+    @Override
+    public PatientResponseDto getPatientByEmail(String email) {
+        Patient patient = patientRepo.findByEmail(email)
+                .orElseThrow(() -> new PatientNotFoundException(PATIENT_NOT_FOUND_EXCEPTION));
+        return mapper.patientToResponseDto(patient);
+    }
 }
