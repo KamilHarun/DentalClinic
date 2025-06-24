@@ -1,6 +1,8 @@
 package org.example.authms.Service.Impl;
 
 import lombok.RequiredArgsConstructor;
+import org.example.authms.Dto.LoginRequest;
+import org.example.authms.Dto.RegisterRequestDto;
 import org.example.authms.Model.User;
 import org.example.authms.Repo.UserRepository;
 import org.example.authms.Service.AuthService;
@@ -24,7 +26,6 @@ public class AuthServiceImpl implements AuthService {
 
     private record OtpEntry(String otp, Instant createdAt) {}
 
-    // 1. OTP gönderme
     @Override
     public Mono<Void> sendOtp(String email) {
         return Mono.fromSupplier(() -> {
@@ -34,32 +35,32 @@ public class AuthServiceImpl implements AuthService {
         }).flatMap(otp -> mailService.sendOtpMail(email, otp));
     }
 
-    // 2. Register - OTP ile birlikte
     @Override
-    public Mono<Object> register(String email, String password, String otp) {
+    public Mono<Object> register(RegisterRequestDto request) {
         return Mono.fromCallable(() -> {
-            OtpEntry entry = otpStorage.get(email);
-            if (entry == null || !entry.otp().equals(otp)) {
+            OtpEntry entry = otpStorage.get(request.getEmail());
+            if (entry == null || !entry.otp().equals(request.getOtp())) {
                 throw new RuntimeException("Invalid or missing OTP");
             }
             if (Instant.now().isAfter(entry.createdAt().plusSeconds(300))) {
                 throw new RuntimeException("OTP expired");
             }
 
-            // Email zaten var mı?
-            if (userRepository.existsByEmail(email)) {
+            if (userRepository.existsByEmail(request.getEmail())) {
                 throw new RuntimeException("Email already registered");
             }
 
-            // Kullanıcıyı oluştur
             User user = User.builder()
-                    .email(email)
-                    .password(passwordEncoder.encode(password))
+                    .email(request.getEmail())
+                    .password(passwordEncoder.encode(request.getPassword()))
+                    .phone(request.getPhone())
+                    .firstName(request.getFirstName())
+                    .lastName(request.getLastName())
                     .isVerified(true)
                     .build();
 
             userRepository.save(user);
-            otpStorage.remove(email); // OTP temizle
+            otpStorage.remove(request.getEmail());
 
             return "User registered successfully.";
         });
@@ -67,19 +68,18 @@ public class AuthServiceImpl implements AuthService {
 
     // 3. Login
     @Override
-    public Mono<Object> login(String email, String password) {
+    public Mono<Object> login(LoginRequest request) {
         return Mono.fromSupplier(() -> {
-            User user = userRepository.findByEmail(email)
+            User user = userRepository.findByEmail(request.getEmail())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            if (!passwordEncoder.matches(password, user.getPassword())) {
+            if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
                 throw new RuntimeException("Invalid password");
             }
 
             if (!user.isVerified()) {
                 throw new RuntimeException("User not verified. Please verify OTP.");
             }
-
             return "Login successful";
         });
     }

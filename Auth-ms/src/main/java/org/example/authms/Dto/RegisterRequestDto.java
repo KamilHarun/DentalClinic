@@ -11,10 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RegisterRequestDto {
-    String email;
-    String password;
+    private String email;
+    private String password;
+    private String otp;
+    private String firstName;
+    private String lastName;
+    private String phone;
     boolean isVerified = false;
-    String otp;
 
 }
 

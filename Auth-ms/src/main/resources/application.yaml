@@ -2,11 +2,13 @@ spring:
   application:
     name: auth-service
 
+
   mail:
     host: smtp.gmail.com
     port: 587
     username: harunov21@gmail.com
-    password: rvfx emss yjru zkof
+    password: vyom jsre edvt tbxu
+
     properties:
       mail:
         smtp:
@@ -22,9 +24,25 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
+
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
 
 server:
   port: 8089

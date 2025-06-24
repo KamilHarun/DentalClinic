@@ -23,4 +23,9 @@ public class FallbackController {
     public FallBackResponse fallbackDentist() {
         return new FallBackResponse("Dentist service is currently unavailable. Please try again later.");
     }
+
+    @GetMapping("/authServiceFallback")
+    public FallBackResponse fallbackAuth() {
+        return new FallBackResponse("Auth service is currently unavailable. Please try again later.");
+    }
 }
